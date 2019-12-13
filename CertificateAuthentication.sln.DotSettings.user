@@ -1,0 +1,10 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/RunConfigs/Config/=D095848DFB09954BAAE039D6DDF620BF/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Config/=D095848DFB09954BAAE039D6DDF620BF/Type/@EntryValue">project</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=D095848DFB09954BAAE039D6DDF620BF/Name/@EntryValue">HealthChecksUI</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=D095848DFB09954BAAE039D6DDF620BF/ProjectGuid/@EntryValue">C32DBA07D3AF9E46AB309A6A51CEA5A1</s:String>
+	<s:String x:Key="/Default/RunConfigs/Active/@EntryValue">DDC5B85181B83B458CD05473E0E4B3FA</s:String>
+	<s:Boolean x:Key="/Default/RunConfigs/Config/=DDC5B85181B83B458CD05473E0E4B3FA/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Config/=DDC5B85181B83B458CD05473E0E4B3FA/Name/@EntryValue">Basic</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=DDC5B85181B83B458CD05473E0E4B3FA/ProjectGuid/@EntryValue">6249B8C326A48E49B8436CB882B5D00C</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=DDC5B85181B83B458CD05473E0E4B3FA/Type/@EntryValue">project</s:String></wpf:ResourceDictionary>

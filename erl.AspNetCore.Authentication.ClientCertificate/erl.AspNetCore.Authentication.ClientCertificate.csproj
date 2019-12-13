@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>1.0.0-preview3</Version>
+
+    <PackageId>erl.AspNetCore.Authentication.ClientCertificate</PackageId>
+    <Authors>Espen Røvik Larsen</Authors>
+    <Description>
+      Expands client certificate validation using a certificate store. Also provides a UI for managing the certificate store.
+    </Description>
+    <PackageTags>aspnetcore;authentication;security;x509;certificate</PackageTags>
+    <RepositoryUrl>https://github.com/espenrl/erl.AspNetCore.Authentication.ClientCertificate</RepositoryUrl>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="axios.min.js" />
+    <EmbeddedResource Include="index.html" />
+    <EmbeddedResource Include="jquery-3.5.1.slim.min.js" />
+    <EmbeddedResource Include="main.css" />
+    <EmbeddedResource Include="main.js" />
+    <EmbeddedResource Include="popper.min.js" />
+    <EmbeddedResource Include="vue.min.js" />
+    <EmbeddedResource Include="bootstrap.min.css" />
+    <EmbeddedResource Include="bootstrap-grid.min.css" />
+    <EmbeddedResource Include="bootstrap.bundle.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="3.1.6" />
+  </ItemGroup>
+
+  <!-- SourceLink -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <!-- analyzers -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
