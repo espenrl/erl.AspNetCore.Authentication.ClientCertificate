@@ -41,6 +41,11 @@
                 var fromTarget = $(event.relatedTarget);
                 me.thumbprint = fromTarget.data('thumbprint');
             });
+
+        jQuery('form').on('submit',
+            function(event) {
+                event.preventDefault();
+            });
     },
     filters: {
         formatDate: function (rawDate) {

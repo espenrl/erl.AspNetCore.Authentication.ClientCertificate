@@ -124,50 +124,52 @@
         </div>
 
         <div class="modal" id="upload-modal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Upload certificate</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="upload-description">Description</label>
-                            <input v-model="description" type="text" class="form-control" id="upload-description" name="upload-description">
-                            <div class="is-invalid">{{ descriptionError }}</div>
+            <form id="upload-modal-form">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Upload certificate</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="upload-role">Security clearance</label>
-                            <select name="upload-role" id="upload-role" v-model="selectedRole">
-                                <option disabled value="">Please select a role</option>
-                                <option v-for="role in availableRoles" v-bind:value="role">
-                                    {{ role }}
-                                </option>
-                            </select>
-                            <div class="is-invalid">{{ roleError }}</div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="upload-description">Description</label>
+                                <input v-model="description" type="text" class="form-control" id="upload-description" name="upload-description">
+                                <div class="is-invalid">{{ descriptionError }}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="upload-role">Security clearance</label>
+                                <select name="upload-role" id="upload-role" v-model="selectedRole">
+                                    <option disabled value="">Please select a role</option>
+                                    <option v-for="role in availableRoles" v-bind:value="role">
+                                        {{ role }}
+                                    </option>
+                                </select>
+                                <div class="is-invalid">{{ roleError }}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cert-file">Certificate file</label>
+                                <input type="file" class="form-control" name="upload-cert" id="cert-file">
+                                <div class="is-invalid">{{ certificateError }}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="upload-password">Certificate passphrase</label>
+                                <input v-model="password" type="password" class="form-control" name="upload-password" id="upload-password">
+                                <div class="is-invalid">{{ passwordError }}</div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="cert-file">Certificate file</label>
-                            <input type="file" class="form-control" name="upload-cert" id="cert-file">
-                            <div class="is-invalid">{{ certificateError }}</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button v-on:click="submitCertificateUpload" type="submit" class="btn btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M7 9H5l3-3 3 3H9v5H7V9zm5-4c0-.44-.91-3-4.5-3C5.08 2 3 3.92 3 6 1.02 6 0 7.52 0 9c0 1.53 1 3 3 3h3v-1.3H3c-1.62 0-1.7-1.42-1.7-1.7 0-.17.05-1.7 1.7-1.7h1.3V6c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V12h2c2.08 0 4-1.16 4-3.5C16 6.06 14.08 5 12 5z"></path></svg>
+                                Upload
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="upload-password">Certificate passphrase</label>
-                            <input v-model="password" type="password" class="form-control" name="upload-password" id="upload-password">
-                            <div class="is-invalid">{{ passwordError }}</div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button v-on:click="submitCertificateUpload" type="button" class="btn btn-success">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M7 9H5l3-3 3 3H9v5H7V9zm5-4c0-.44-.91-3-4.5-3C5.08 2 3 3.92 3 6 1.02 6 0 7.52 0 9c0 1.53 1 3 3 3h3v-1.3H3c-1.62 0-1.7-1.42-1.7-1.7 0-.17.05-1.7 1.7-1.7h1.3V6c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V12h2c2.08 0 4-1.16 4-3.5C16 6.06 14.08 5 12 5z"></path></svg>
-                            Upload
-                        </button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
         <div class="modal" id="generate-modal" tabindex="-1" role="dialog">
@@ -209,7 +211,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button v-on:click="generateCertificate" type="button" class="btn btn-success">
+                            <button v-on:click="generateCertificate" type="submit" class="btn btn-success">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M1 4.27v7.47c0 .45.3.84.75.97l6.5 1.73c.16.05.34.05.5 0l6.5-1.73c.45-.13.75-.52.75-.97V4.27c0-.45-.3-.84-.75-.97l-6.5-1.74a1.4 1.4 0 00-.5 0L1.75 3.3c-.45.13-.75.52-.75.97zm7 9.09l-6-1.59V5l6 1.61v6.75zM2 4l2.5-.67L11 5.06l-2.5.67L2 4zm13 7.77l-6 1.59V6.61l2-.55V8.5l2-.53V5.53L15 5v6.77zm-2-7.24L6.5 2.8l2-.53L15 4l-2 .53z"></path></svg>
                                 Generate &amp; download
                             </button>
@@ -220,71 +222,75 @@
         </div>
 
         <div class="modal" id="edit-certificate" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit certificate</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="edit-description">Description</label>
-                            <input v-model="description" type="text" class="form-control" id="edit-description" name="edit-description">
-                            <div class="is-invalid">{{ descriptionError }}</div>
+            <form id="edit-modal-form">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit certificate</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="edit-role">Security clearance</label>
-                            <select name="edit-role" id="edit-role" v-model="selectedRole">
-                                <option disabled value="">Please select a security clearance</option>
-                                <option v-for="role in availableRoles" v-bind:value="role">
-                                    {{ role }}
-                                </option>
-                            </select>
-                            <div class="is-invalid">{{ roleError }}</div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="edit-description">Description</label>
+                                <input v-model="description" type="text" class="form-control" id="edit-description" name="edit-description">
+                                <div class="is-invalid">{{ descriptionError }}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-role">Security clearance</label>
+                                <select name="edit-role" id="edit-role" v-model="selectedRole">
+                                    <option disabled value="">Please select a security clearance</option>
+                                    <option v-for="role in availableRoles" v-bind:value="role">
+                                        {{ role }}
+                                    </option>
+                                </select>
+                                <div class="is-invalid">{{ roleError }}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button v-on:click="updateCertificate" type="button" class="btn btn-success">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
-                                <path fill-rule="evenodd" d="M13.5 10a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z" />
-                                <path fill-rule="evenodd" d="M13 12.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z" />
-                            </svg>
-                            Save
-                        </button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button v-on:click="updateCertificate" type="submit" class="btn btn-success">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                    <path fill-rule="evenodd" d="M13.5 10a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z" />
+                                    <path fill-rule="evenodd" d="M13 12.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z" />
+                                </svg>
+                                Save
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
         <div class="modal" id="disable-certificate" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Disable certificate</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to disable the certificate?</p>
-                        <div class="is-invalid">{{ certificateError }}</div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button v-on:click="removeCertificate" type="button" class="btn btn-danger">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
-                                <path fill-rule="evenodd" d="M11 11.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
-                            </svg>
-                            Disable
-                        </button>
+            <form id="disable-modal-form">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Disable certificate</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to disable the certificate?</p>
+                            <div class="is-invalid">{{ certificateError }}</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button v-on:click="removeCertificate" type="submit" class="btn btn-danger">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                    <path fill-rule="evenodd" d="M11 11.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
+                                </svg>
+                                Disable
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
     </div>
