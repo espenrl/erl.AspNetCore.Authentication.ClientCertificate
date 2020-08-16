@@ -23,23 +23,28 @@
     },
     mounted: function () {
         var me = this;
-        jQuery('#generate-modal, #upload-modal, #edit-certificate, #disable-certificate').on('hide.bs.modal',
+        window.jQuery('#generate-modal, #upload-modal, #edit-certificate, #disable-certificate').on('hide.bs.modal',
             function() {
                 me.resetForm();
             });
 
-        jQuery('#edit-certificate').on('show.bs.modal',
+        window.jQuery('#edit-certificate').on('show.bs.modal',
             function(event) {
-                var fromTarget = $(event.relatedTarget);
+                var fromTarget = window.jQuery(event.relatedTarget);
                 me.thumbprint = fromTarget.data('thumbprint');
                 me.selectedRole = fromTarget.data('role');
                 me.description = fromTarget.data('description');
             });
 
-        jQuery('#disable-certificate').on('show.bs.modal',
+        window.jQuery('#disable-certificate').on('show.bs.modal',
             function(event) {
-                var fromTarget = $(event.relatedTarget);
+                var fromTarget = window.jQuery(event.relatedTarget);
                 me.thumbprint = fromTarget.data('thumbprint');
+            });
+
+        window.jQuery('form').on('submit',
+            function(event) {
+                event.preventDefault();
             });
     },
     filters: {
@@ -86,6 +91,7 @@
             var charCode = (evt.which) ? evt.which : evt.keyCode;
             if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
                 evt.preventDefault();
+                return false;
             } else {
                 return true;
             }
@@ -108,7 +114,7 @@
         },
         refreshAvailableRoles: function() {
             var me = this;
-            axios
+            window.axios
                 .get('api/ClientCertificate/GetAllRoles')
                 .then(function(response) {
                     me.availableRoles = response.data.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
@@ -116,7 +122,7 @@
         },
         refreshCertificateList: function() {
             var me = this;
-            axios
+            window.axios
                 .get('api/ClientCertificate/GetAll')
                 .then(function(response) {
                     me.certificateList = response.data.sort((a, b) => a.description.toLocaleLowerCase().localeCompare(b.description.toLocaleLowerCase()));
@@ -127,7 +133,7 @@
 
             me.resetErrors();
 
-            axios({
+            window.axios({
                 url: 'api/ClientCertificate/Generate',
                 method: 'POST',
                 accept: 'application/octet-stream application/json',
@@ -148,7 +154,7 @@
 
                 me.refreshCertificateList();
                 me.resetForm();
-                jQuery('#generate-modal').modal('hide');
+                window.jQuery('#generate-modal').modal('hide');
             }).catch(function (errorResponse) {
                 console.log('errorResponse', errorResponse);
                 var reader = new FileReader();
@@ -165,15 +171,17 @@
         setErrors: function (errors) {
             this.resetErrors();
             for (var fieldName in errors) {
-                var errorText = errors[fieldName][0];
-                console.log('errorText', errorText);
-                fieldName = fieldName[0].toLowerCase() + fieldName.substring(1) + "Error";
-                this[fieldName] = errorText;
+                if (Object.prototype.hasOwnProperty.call(errors, fieldName)) {
+                    var errorText = errors[fieldName][0];
+                    console.log('errorText', errorText);
+                    fieldName = fieldName[0].toLowerCase() + fieldName.substring(1) + "Error";
+                    this[fieldName] = errorText;
+                }
             }
         },
         updateCertificate: function() {
             var me = this;
-            axios.post('api/ClientCertificate/Update',
+            window.axios.post('api/ClientCertificate/Update',
                     {
                         Thumbprint: me.thumbprint,
                         Role: me.selectedRole,
@@ -182,7 +190,7 @@
                 .then(function() {
                     me.resetForm();
                     me.refreshCertificateList();
-                    jQuery('#edit-certificate').modal('hide');
+                    window.jQuery('#edit-certificate').modal('hide');
                 })
                 .catch(function (error) {
                     me.setErrors(error.response.data);
@@ -190,14 +198,14 @@
         },
         removeCertificate: function() {
             var me = this;
-            axios.post('api/ClientCertificate/RemoveCertificate',
+            window.axios.post('api/ClientCertificate/RemoveCertificate',
                     {
                         Thumbprint: me.thumbprint
                     })
-                .then(function (response) {
+                .then(function () {
                     me.refreshCertificateList();
                     me.resetForm();
-                    jQuery('#disable-certificate').modal('hide');
+                    window.jQuery('#disable-certificate').modal('hide');
                 })
                 .catch(function (error) {
                     me.setErrors(error.response.data);
@@ -232,7 +240,7 @@
                     encoded += '='.repeat(4 - (encoded.length % 4));
                 }
 
-                axios.post('api/ClientCertificate/Upload',
+                window.axios.post('api/ClientCertificate/Upload',
                         {
                             Description: me.description,
                             Role: me.selectedRole,
@@ -242,7 +250,7 @@
                     .then(function() {
                         me.resetForm();
                         me.refreshCertificateList();
-                        jQuery('#upload-modal').modal('hide');
+                        window.jQuery('#upload-modal').modal('hide');
                     })
                     .catch(function (error) {
                         me.setErrors(error.response.data);
@@ -253,11 +261,11 @@
             };
         },
         setClipboard: function (srcText) {
-            navigator.clipboard.writeText(srcText).then(function () {
-                // todo: notify user that clipboard has been set
-            }, function (err) {
+            navigator.clipboard.writeText(srcText)
+                .then(function () { }
+                    , function (err) {
                 console.error('Async: Could not copy text: ', err);
             });
-        },
+        }
     }
 });
