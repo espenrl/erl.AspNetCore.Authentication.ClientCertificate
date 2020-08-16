@@ -10,9 +10,9 @@ body {
     padding-top: 72px;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
     body {
-        padding-top: 66px;
+        padding-top: 166px;
     }
 }
 
@@ -39,6 +39,20 @@ select {
     height: 38px;
     width: -webkit-fill-available;
     padding-left: 9px;
+}
+
+@media screen and (max-width: 992px) {
+    .filter-adjust {
+        width: 100% !important;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .filter-adjust {
+        margin-left: auto !important;
+        margin-top: 5px;
+        width: 50% !important;
+    }
 }
 
 .modal-header, .modal-footer {
