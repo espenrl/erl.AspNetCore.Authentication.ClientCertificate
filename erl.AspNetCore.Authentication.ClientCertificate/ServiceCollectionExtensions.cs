@@ -97,6 +97,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
             // set ASP.NET Core framework options
             builder.Services.PostConfigure<CertificateAuthenticationOptions>(CertificateAuthenticationDefaults.AuthenticationScheme, ConfigureCertificateAuthentication);
             builder.Services.PostConfigure<AuthorizationOptions>(ConfigureAuthorization);
+            builder.Services.AddMemoryCache();
             return builder;
         }
     }

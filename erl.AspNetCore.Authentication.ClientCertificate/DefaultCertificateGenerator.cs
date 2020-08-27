@@ -21,9 +21,9 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
                     new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment, true),
                     new X509EnhancedKeyUsageExtension(
                         new OidCollection {
-                            new Oid("1.3.6.1.5.5.7.3.2"), // TLS client authentication
-                            new Oid("1.3.6.1.5.5.7.3.1")  // TLS server authentication
-                        }, false)
+							new Oid("1.3.6.1.5.5.7.3.1"), // TLS server authentication
+                            new Oid("1.3.6.1.5.5.7.3.2")  // TLS client authentication
+                        }, true)
                 }
             };
             var certificate = req.CreateSelfSigned(notBefore, notAfter);
