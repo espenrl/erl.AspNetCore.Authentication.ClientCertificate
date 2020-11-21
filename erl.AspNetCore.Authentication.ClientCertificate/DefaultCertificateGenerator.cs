@@ -5,23 +5,36 @@ using System.Text;
 
 namespace erl.AspNetCore.Authentication.ClientCertificate
 {
+    public class DefaultCertificateGeneratorOptions
+    {
+        public int RsaKeySizeInBits { get; set; } = 4096;
+        public RSASignaturePadding RsaSignaturePaddingScheme { get; set; } = RSASignaturePadding.Pkcs1;
+        public HashAlgorithmName HashAlgorithm { get; set; } = HashAlgorithmName.SHA512;
+        public PbeEncryptionAlgorithm PemEncryptionAlgorithm { get; set; } = PbeEncryptionAlgorithm.Aes256Cbc;
+    }
+
     public class DefaultCertificateGenerator : ICertificateGenerator
     {
+        private readonly DefaultCertificateGeneratorOptions _options;
+
+        public DefaultCertificateGenerator(DefaultCertificateGeneratorOptions options)
+        {
+            _options = options;
+        }
+
         /// <summary>
-        /// Generated self signed client certificates using elliptic curve algorithm with SHA256 hashing.
+        /// Generated self signed client certificates using RSA algorithm with SHA256 hashing.
+        /// NOTE: ECDSA client certificates does not work well with .NET Core 3.1 HttpClient as of November 2020.
         /// </summary>
         public X509Certificate2 GenerateCertificate(string subjectName, string friendlyName, DateTime notBefore, DateTime notAfter)
         {
-            using var ecDsa = ECDsa.Create();
-            var req = new CertificateRequest(subjectName, ecDsa, HashAlgorithmName.SHA256)
+            using var rsa = RSA.Create(_options.RsaKeySizeInBits);
+            var req = new CertificateRequest(subjectName, rsa, _options.HashAlgorithm, _options.RsaSignaturePaddingScheme)
             {
                 CertificateExtensions =
                 {
-                    new X509BasicConstraintsExtension(false, false, 0, true),
-                    new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment, true),
                     new X509EnhancedKeyUsageExtension(
                         new OidCollection {
-							new Oid("1.3.6.1.5.5.7.3.1"), // TLS server authentication
                             new Oid("1.3.6.1.5.5.7.3.2")  // TLS client authentication
                         }, true)
                 }
@@ -33,8 +46,8 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
 
         public byte[] ExportCertificateToPemWithEncryptedPrivateKey(X509Certificate2 certificate, string password)
         {
-            var pbeParameters = new PbeParameters(PbeEncryptionAlgorithm.Aes256Cbc, HashAlgorithmName.SHA256, 100_000);
-            var privateKeyBytes = certificate.GetECDsaPrivateKey().ExportEncryptedPkcs8PrivateKey(password, pbeParameters);
+            var pbeParameters = new PbeParameters(_options.PemEncryptionAlgorithm, _options.HashAlgorithm, 100_000);
+            var privateKeyBytes = certificate.GetRSAPrivateKey().ExportEncryptedPkcs8PrivateKey(password, pbeParameters);
             var builder = new StringBuilder();
             builder.AppendLine("-----BEGIN EC PRIVATE KEY-----");
             builder.AppendLine("Proc-Type: 4,ENCRYPTED");

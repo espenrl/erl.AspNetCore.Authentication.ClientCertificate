@@ -88,6 +88,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
             }
 
             builder.Services.TryAddScoped<ICertificateGenerator, DefaultCertificateGenerator>();
+            builder.Services.TryAddScoped<DefaultCertificateGeneratorOptions, DefaultCertificateGeneratorOptions>();
             builder.Services.TryAddScoped<IClientCertificateValidationService, DefaultClientCertificateValidationService>();
             builder.Services
                 .AddOptions<CertificateManagementValidationOptions>()

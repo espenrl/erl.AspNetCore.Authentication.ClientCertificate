@@ -33,7 +33,9 @@ namespace Example.HealthChecksUI
             {
                 options.AddPolicy(
                     Policies.ViewHealthChecks, 
-                    builder => builder.RequireRole(Roles.HealthChecksViewer, ClientCertificateManagementDefaults.ManageClientCertificatesRoleName));
+                    builder => builder.RequireRole(
+                        Roles.HealthChecksViewer, 
+                        ClientCertificateManagementDefaults.ManageClientCertificatesRoleName));
             }
 
             static void ConfigureCertificateValidation(CertificateAuthenticationOptions options)
@@ -57,7 +59,7 @@ namespace Example.HealthChecksUI
                 .AddSingleton<IClientCertificateRepository, InMemoryClientCertificateRepository>()
                 .AddOptions<InMemoryClientCertificateOptions>()
                 .Configure<IConfiguration>((options, configuration) =>
-                    options.MasterCertificate = new X509Certificate2(File.ReadAllBytes("ClientCertificate Management UI.pfx"), "notasecret"));
+                    options.MasterCertificate = new X509Certificate2(File.ReadAllBytes("Client Certificate Management UI example.pfx"), "notasecret"));
 
             // enable API for client certificate management UI
             services.AddClientCertificateManagementUiApi();
