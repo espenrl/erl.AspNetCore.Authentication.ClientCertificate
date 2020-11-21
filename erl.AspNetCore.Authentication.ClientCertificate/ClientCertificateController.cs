@@ -260,8 +260,10 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
                 return BadRequest(ModelState);
             }
 
+            var subjectName = EncodeCsrField($"CN={model.Description}");
+            var friendlyName = EncodeCsrField(model.Description);
             var certificate = await Task
-                .Run(() => _certificateGenerator.GenerateCertificate($"CN={model.Description}", model.Description, DateTime.Today, notAfter))
+                .Run(() => _certificateGenerator.GenerateCertificate(subjectName, friendlyName, DateTime.Today, notAfter))
                 .ConfigureAwait(false);
 
             var thumbprintLowercased = certificate.Thumbprint.ToLowerInvariant();
@@ -310,65 +312,76 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
             return zipStream;
         }
 
+        /// <summary>
+        /// Adhere to rules for X500DistinguishedName.
+        /// </summary>
+        private static string EncodeCsrField(string str)
+        {
+            var invalidCsrFieldCharacters = new[]
+            { '!', '@', '#', '$', '%', '^', '*', '(', ')', '~', '?', '>', '<', '&', '/', '\\', ',', '.', '"', '\'' };
+            var parts = str.Split(invalidCsrFieldCharacters, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join("", parts);
+        }
+
         private static string EncodeFileName(string str)
         {
             var parts = str.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries);
             return string.Join("", parts);
         }
+    }
 
-        public class ClientCertificateViewModel
+    public class ClientCertificateViewModel
+    {
+        public ClientCertificateViewModel(string thumbprint, string subject, DateTime notAfter, string description, string role)
         {
-            public ClientCertificateViewModel(string thumbprint, string subject, DateTime notAfter, string description, string role)
-            {
-                if (string.IsNullOrWhiteSpace(thumbprint))
-                    throw new ArgumentException("Value cannot be null or whitespace.", nameof(thumbprint));
-                if (string.IsNullOrWhiteSpace(subject))
-                    throw new ArgumentException("Value cannot be null or whitespace.", nameof(subject));
-                if (string.IsNullOrWhiteSpace(description))
-                    throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
-                if (string.IsNullOrWhiteSpace(role))
-                    throw new ArgumentException("Value cannot be null or whitespace.", nameof(role));
+            if (string.IsNullOrWhiteSpace(thumbprint))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(thumbprint));
+            if (string.IsNullOrWhiteSpace(subject))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(subject));
+            if (string.IsNullOrWhiteSpace(description))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(description));
+            if (string.IsNullOrWhiteSpace(role))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(role));
 
-                Thumbprint = thumbprint;
-                Subject = subject;
-                NotAfter = notAfter;
-                Description = description;
-                Role = role;
-            }
-
-            public string Thumbprint { get; }
-            public string Subject { get; }
-            public DateTime NotAfter { get; }
-            public string Description { get; }
-            public string Role { get; }
+            Thumbprint = thumbprint;
+            Subject = subject;
+            NotAfter = notAfter;
+            Description = description;
+            Role = role;
         }
 
-        public class GenerateCertificateModel
-        {
-            public string Description { get; set; }
-            public string Role { get; set; }
-            public string Password { get; set; }
-            public int ValidForMonths { get; set; }
-        }
+        public string Thumbprint { get; }
+        public string Subject { get; }
+        public DateTime NotAfter { get; }
+        public string Description { get; }
+        public string Role { get; }
+    }
 
-        public class UploadCertificateModel
-        {
-            public string Description { get; set; }
-            public string Role { get; set; }
-            public string Password { get; set; }
-            public string CertificateEncoded { get; set; }
-        }
+    public class GenerateCertificateModel
+    {
+        public string Description { get; set; }
+        public string Role { get; set; }
+        public string Password { get; set; }
+        public int ValidForMonths { get; set; }
+    }
 
-        public class UpdateCertificateModel
-        {
-            public string Thumbprint { get; set; }
-            public string Description { get; set; }
-            public string Role { get; set; }
-        }
+    public class UploadCertificateModel
+    {
+        public string Description { get; set; }
+        public string Role { get; set; }
+        public string Password { get; set; }
+        public string CertificateEncoded { get; set; }
+    }
 
-        public class RemoveCertificateModel
-        {
-            public string Thumbprint { get; set; }
-        }
+    public class UpdateCertificateModel
+    {
+        public string Thumbprint { get; set; }
+        public string Description { get; set; }
+        public string Role { get; set; }
+    }
+
+    public class RemoveCertificateModel
+    {
+        public string Thumbprint { get; set; }
     }
 }
