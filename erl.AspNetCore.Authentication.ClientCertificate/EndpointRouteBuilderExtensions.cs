@@ -15,25 +15,30 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
 
             endpointRouteBuilder.MapControllers(); // adds ClientCertificateController
 
+            endpointRouteBuilder
+                .Map(ClientCertificateManagementDefaults.ManagementPortalAssetsRoute, endpointRouteBuilder.BuildCertificateManagementAssetsPipeline())
+                .RequireAuthorization(ClientCertificateManagementDefaults.ManageClientCertificatesPolicyName)
+                .WithDisplayName(ClientCertificateManagementDefaults.ManagementPortalDisplayName);
+
+            var staticFileOptions = new StaticFileOptions
+            {
+                FileProvider = new EmbeddedFileProvider(typeof(ClientCertificateManagementDefaults).Assembly, typeof(ClientCertificateManagementDefaults).Namespace),
+                HttpsCompression = HttpsCompressionMode.Compress
+            };
+
             return endpointRouteBuilder
-                .Map(ClientCertificateManagementDefaults.ManagementPortalRoute, endpointRouteBuilder.BuildCertificateManagementPipeline())
+                .MapFallbackToFile(ClientCertificateManagementDefaults.ManagementPortalRoute, "index.html", staticFileOptions)
                 .RequireAuthorization(ClientCertificateManagementDefaults.ManageClientCertificatesPolicyName)
                 .WithDisplayName(ClientCertificateManagementDefaults.ManagementPortalDisplayName);
         }
 
-        private static RequestDelegate BuildCertificateManagementPipeline(this IEndpointRouteBuilder endpointRouteBuilder)
+        private static RequestDelegate BuildCertificateManagementAssetsPipeline(this IEndpointRouteBuilder endpointRouteBuilder)
         {
             var staticFileOptions = new StaticFileOptions
             {
                 FileProvider = new EmbeddedFileProvider(typeof(ClientCertificateManagementDefaults).Assembly, typeof(ClientCertificateManagementDefaults).Namespace),
                 HttpsCompression = HttpsCompressionMode.Compress,
-                RequestPath = ClientCertificateManagementDefaults.ManagementPortalUri
-            };
-
-            var fallbackStaticFileOptions = new StaticFileOptions
-            {
-                FileProvider = new EmbeddedFileProvider(typeof(ClientCertificateManagementDefaults).Assembly, typeof(ClientCertificateManagementDefaults).Namespace),
-                HttpsCompression = HttpsCompressionMode.Compress
+                RequestPath = ClientCertificateManagementDefaults.ManagementPortalAssetsUri
             };
 
             return endpointRouteBuilder
@@ -41,12 +46,11 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
                 .Use(async (context, continuation) =>
                 {
                     // unset endpoint or else StaticFileMiddleware will refuse to process
+                    // https://github.com/dotnet/aspnetcore/issues/24252
                     context.SetEndpoint(null);
                     await continuation().ConfigureAwait(false);
                 })
                 .UseStaticFiles(staticFileOptions)
-                .UseRouting()
-                .UseEndpoints(e => e.MapFallbackToFile("{*path}", "index.html", fallbackStaticFileOptions))
                 .Build();
         }
     }

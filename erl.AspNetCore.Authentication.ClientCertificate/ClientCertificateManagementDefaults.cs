@@ -4,7 +4,8 @@
     {
         // portal
         public const string ManagementPortalDisplayName = "Client certificate management";
-        public const string ManagementPortalUri = "/managecertificates";
+        public const string ManagementPortalAssetsUri = "/managecertificates/assets";
+        public const string ManagementPortalAssetsRoute = "/managecertificates/assets/{*path}";
         public const string ManagementPortalRoute = "/managecertificates/{*path}";
 
         // authorization

@@ -115,7 +115,7 @@
         refreshAvailableRoles: function() {
             var me = this;
             window.axios
-                .get('api/ClientCertificate/GetAllRoles')
+                .get('/api/ClientCertificate/GetAllRoles')
                 .then(function(response) {
                     me.availableRoles = response.data.sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
                 });
@@ -123,7 +123,7 @@
         refreshCertificateList: function() {
             var me = this;
             window.axios
-                .get('api/ClientCertificate/GetAll')
+                .get('/api/ClientCertificate/GetAll')
                 .then(function(response) {
                     me.certificateList = response.data.sort((a, b) => a.description.toLocaleLowerCase().localeCompare(b.description.toLocaleLowerCase()));
                 });
@@ -134,7 +134,7 @@
             me.resetErrors();
 
             window.axios({
-                url: 'api/ClientCertificate/Generate',
+                url: '/api/ClientCertificate/Generate',
                 method: 'POST',
                 accept: 'application/octet-stream application/json',
                 responseType: 'blob',
@@ -181,7 +181,7 @@
         },
         updateCertificate: function() {
             var me = this;
-            window.axios.post('api/ClientCertificate/Update',
+            window.axios.post('/api/ClientCertificate/Update',
                     {
                         Thumbprint: me.thumbprint,
                         Role: me.selectedRole,
@@ -198,7 +198,7 @@
         },
         removeCertificate: function() {
             var me = this;
-            window.axios.post('api/ClientCertificate/RemoveCertificate',
+            window.axios.post('/api/ClientCertificate/RemoveCertificate',
                     {
                         Thumbprint: me.thumbprint
                     })
@@ -240,7 +240,7 @@
                     encoded += '='.repeat(4 - (encoded.length % 4));
                 }
 
-                window.axios.post('api/ClientCertificate/Upload',
+                window.axios.post('/api/ClientCertificate/Upload',
                         {
                             Description: me.description,
                             Role: me.selectedRole,
