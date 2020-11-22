@@ -180,22 +180,6 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
                 var bytes = Convert.FromBase64String(model.CertificateEncoded);
                 using var certificate = new X509Certificate2(bytes, password);
 
-                using var chain = new X509Chain
-                {
-                    ChainPolicy =
-                    {
-                        RevocationMode = X509RevocationMode.NoCheck,
-                        VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority
-                    }
-                };
-
-                if (!chain.Build(certificate))
-                {
-                    var description = string.Join(", ", chain.ChainStatus.Select(cs => cs.StatusInformation));
-                    ModelState.AddModelError("Certificate", $"Certificate is not valid. {description}");
-                    return BadRequest(ModelState);
-                }
-
                 var thumbprintLowercased = certificate.Thumbprint.ToLowerInvariant();
 
                 var (certificateFound, _) = await _clientCertificateRepository
