@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "CertificateAuthentication": {
+    "Health Checks UI example": {
       "commandName": "Project",
       "launchBrowser": false,
       "applicationUrl": "https://localhost:5002",

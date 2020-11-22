@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "CertificateAuthentication": {
+    "Basic example": {
       "commandName": "Project",
       "launchBrowser": false,
       "applicationUrl": "https://localhost:5001",
