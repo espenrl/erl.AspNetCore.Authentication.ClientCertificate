@@ -1,6 +1,12 @@
-# Build results
+# build output
 bin/
+
+# build temporary
 obj/
 
-# Visual Studio 2015 cache/options directory
+# Visual Studio cache/options directory
 .vs/
+
+# per user
+*.user
+
