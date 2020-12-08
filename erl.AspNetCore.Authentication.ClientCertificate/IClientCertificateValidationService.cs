@@ -8,8 +8,8 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
     {
         public bool IsFail { get; private set; }
         public bool IsSuccess { get; private set; }
-        public string FailureMessage { get; private set; }
-        public ClientCertificateInfo ClientCertificate { get; private set; }
+        public string? FailureMessage { get; private set; }
+        public ClientCertificateInfo? ClientCertificate { get; private set; }
 
         public void Fail(string failureMessage)
         {

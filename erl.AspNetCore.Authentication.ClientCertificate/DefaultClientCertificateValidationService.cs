@@ -14,7 +14,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
         private readonly IClientCertificateRepository _clientCertificateRepository;
 
         public DefaultClientCertificateValidationService(
-            IOptions<CertificateManagementValidationOptions> options, 
+            IOptions<CertificateManagementValidationOptions>? options, 
             IClientCertificateRepository clientCertificateRepository,
             IMemoryCache memoryCache)
         {

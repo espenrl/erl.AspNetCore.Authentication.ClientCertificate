@@ -12,7 +12,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddClientCertificateManagementUiApi(this IServiceCollection services, Action<CertificateManagementUiOptions> configureOptions = null)
+        public static IServiceCollection AddClientCertificateManagementUiApi(this IServiceCollection services, Action<CertificateManagementUiOptions>? configureOptions = null)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
@@ -30,7 +30,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
             return services;
         }
 
-        public static AuthenticationBuilder AddCertificateAuthentication(this AuthenticationBuilder builder, Action<CertificateManagementValidationOptions> configureOptions = null)
+        public static AuthenticationBuilder AddCertificateAuthentication(this AuthenticationBuilder builder, Action<CertificateManagementValidationOptions>? configureOptions = null)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
@@ -43,42 +43,45 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
 
             static void ConfigureCertificateAuthentication(CertificateAuthenticationOptions options)
             {
-                options.Events = new CertificateAuthenticationEvents();
-                options.Events.OnCertificateValidated = async context =>
+                options.Events = new CertificateAuthenticationEvents
                 {
-                    var validationService = context
-                        .HttpContext
-                        .RequestServices
-                        .GetService<IClientCertificateValidationService>();
-
-                    var ctx = new ClientCertificateValidationContext();
-                    await validationService
-                        .ValidateCertificate(context.ClientCertificate, ctx)
-                        .ConfigureAwait(false);
-
-                    if (ctx.IsFail)
+                    OnCertificateValidated = async context =>
                     {
-                        context.Fail(ctx.FailureMessage);
-                        return;
+                        var validationService = context
+                            .HttpContext
+                            .RequestServices
+                            .GetRequiredService<IClientCertificateValidationService>();
+
+                        var ctx = new ClientCertificateValidationContext();
+                        await validationService
+                            .ValidateCertificate(context.ClientCertificate, ctx)
+                            .ConfigureAwait(false);
+
+                        if (ctx.IsFail)
+                        {
+                            context.Fail(ctx.FailureMessage!);
+                            return;
+                        }
+
+                        // verify that IClientCertificateValidationService implementation behaves correctly
+                        if (!ctx.IsSuccess)
+                        {
+                            context.Fail(
+                                $"{validationService.GetType().FullName} is incorrectly implemented. It has to call Fail or Success on supplied context.");
+                            return;
+                        }
+
+                        // success, set role claim
+                        var claimsIdentity = context.Principal!.Identities.Single();
+                        claimsIdentity.Label = ctx.ClientCertificate!.Description;
+                        claimsIdentity.AddClaim(new Claim(
+                            ClaimTypes.Role,
+                            ctx.ClientCertificate.Role,
+                            ClaimValueTypes.String,
+                            context.Options.ClaimsIssuer));
+
+                        context.Success();
                     }
-
-                    // verify that IClientCertificateValidationService implementation behaves correctly
-                    if (!ctx.IsSuccess)
-                    {
-                        context.Fail($"{validationService.GetType().FullName} is incorrectly implemented. It has to call Fail or Success on supplied context.");
-                        return;
-                    }
-
-                    // success, set role claim
-                    var claimsIdentity = context.Principal.Identities.Single();
-                    claimsIdentity.Label = ctx.ClientCertificate.Description;
-                    claimsIdentity.AddClaim(new Claim(
-                        ClaimTypes.Role,
-                        ctx.ClientCertificate.Role,
-                        ClaimValueTypes.String,
-                        context.Options.ClaimsIssuer));
-
-                    context.Success();
                 };
             }
 

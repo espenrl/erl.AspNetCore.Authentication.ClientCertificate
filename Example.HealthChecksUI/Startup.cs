@@ -93,7 +93,7 @@ namespace Example.HealthChecksUI
 
         private static async Task RenderIndexPage(HttpContext context)
         {
-            if (!context.User.Identity.IsAuthenticated)
+            if (!context.User.Identity?.IsAuthenticated ?? false)
             {
                 await context.Response.WriteAsync("<h1>Your client certificate is not known by this site.</h1>");
                 return;

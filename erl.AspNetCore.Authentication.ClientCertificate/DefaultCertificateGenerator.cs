@@ -47,7 +47,8 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
         public byte[] ExportCertificateToPemWithEncryptedPrivateKey(X509Certificate2 certificate, string password)
         {
             var pbeParameters = new PbeParameters(_options.PemEncryptionAlgorithm, _options.HashAlgorithm, 100_000);
-            var privateKeyBytes = certificate.GetRSAPrivateKey().ExportEncryptedPkcs8PrivateKey(password, pbeParameters);
+            var rsa = certificate.GetRSAPrivateKey() ?? throw new Exception("Could not get RSA private key.");
+            var privateKeyBytes = rsa.ExportEncryptedPkcs8PrivateKey(password, pbeParameters);
             var builder = new StringBuilder();
             builder.AppendLine("-----BEGIN EC PRIVATE KEY-----");
             builder.AppendLine("Proc-Type: 4,ENCRYPTED");

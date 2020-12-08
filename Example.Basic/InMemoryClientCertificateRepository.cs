@@ -12,7 +12,7 @@ namespace Example.Basic
 {
     public class InMemoryClientCertificateOptions
     {
-        public X509Certificate2 MasterCertificate { get; set; }
+        public X509Certificate2 MasterCertificate { get; set; } = default!;
     }
 
     public class InMemoryClientCertificateRepository : IClientCertificateRepository
@@ -31,10 +31,12 @@ namespace Example.Basic
         public Task<(bool CertificateFound, ClientCertificateInfo Result)> TryGetCertificate(string thumbprint, CancellationToken _)
         {
             var certificateFound = _inMemoryData.TryGetValue(thumbprint, out var clientCertificateInfo);
-            return Task.FromResult((certificateFound, clientCertificate: clientCertificateInfo));
+            return Task.FromResult((certificateFound, clientCertificateInfo!));
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async IAsyncEnumerable<ClientCertificateInfo> GetAllCertificates([EnumeratorCancellation] CancellationToken _)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             foreach (var clientCertificate in _inMemoryData.Values)
             {

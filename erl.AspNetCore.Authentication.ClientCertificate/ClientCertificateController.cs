@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -76,7 +75,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
         }
 
         [HttpPost]
-        public async Task<ActionResult> RemoveCertificate([FromBody] RemoveCertificateModel model)
+        public async Task<ActionResult> RemoveCertificate([FromBody] RemoveCertificateInputModel model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -109,7 +108,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
         }
 
         [HttpPost]
-        public async Task<ActionResult> Update([FromBody] UpdateCertificateModel model)
+        public async Task<ActionResult> Update([FromBody] UpdateCertificateInputModel model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -147,7 +146,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
         }
 
         [HttpPost]
-        public async Task<ActionResult> Upload([FromBody] UploadCertificateModel model)
+        public async Task<ActionResult> Upload([FromBody] UploadCertificateInputModel model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -214,7 +213,7 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
         }
 
         [HttpPost]
-        public async Task<ActionResult> Generate([FromBody] GenerateCertificateModel model)
+        public async Task<ActionResult> Generate([FromBody] GenerateCertificateInputModel model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -257,7 +256,9 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
                 .ConfigureAwait(false);
 
             var fileName = EncodeFileName(model.Description);
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var zipStream = CreateClientCertificateZipStream(certificate, fileName, model.Password, _certificateGenerator);
+#pragma warning restore CA2000 // Dispose objects before losing scope
             return File(zipStream, "application/octet-stream", $"{fileName}.zip");
         }
 
@@ -341,31 +342,31 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
         public string Role { get; }
     }
 
-    public class GenerateCertificateModel
+    public class GenerateCertificateInputModel
     {
-        public string Description { get; set; }
-        public string Role { get; set; }
-        public string Password { get; set; }
+        public string Description { get; set; } = default!;
+        public string Role { get; set; } = default!;
+        public string Password { get; set; } = default!;
         public int ValidForMonths { get; set; }
     }
 
-    public class UploadCertificateModel
+    public class UploadCertificateInputModel
     {
-        public string Description { get; set; }
-        public string Role { get; set; }
-        public string Password { get; set; }
-        public string CertificateEncoded { get; set; }
+        public string Description { get; set; } = default!;
+        public string Role { get; set; } = default!;
+        public string Password { get; set; } = default!;
+        public string CertificateEncoded { get; set; } = default!;
     }
 
-    public class UpdateCertificateModel
+    public class UpdateCertificateInputModel
     {
-        public string Thumbprint { get; set; }
-        public string Description { get; set; }
-        public string Role { get; set; }
+        public string Thumbprint { get; set; } = default!;
+        public string Description { get; set; } = default!;
+        public string Role { get; set; } = default!;
     }
 
-    public class RemoveCertificateModel
+    public class RemoveCertificateInputModel
     {
-        public string Thumbprint { get; set; }
+        public string Thumbprint { get; set; } = default!;
     }
 }

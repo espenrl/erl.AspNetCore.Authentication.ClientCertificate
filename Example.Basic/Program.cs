@@ -14,7 +14,7 @@ namespace Example.Basic
 
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            void ConfigureKestrel(KestrelServerOptions options)
+            static void ConfigureKestrel(KestrelServerOptions options)
             {
                 options.ConfigureHttpsDefaults(o =>
                 {

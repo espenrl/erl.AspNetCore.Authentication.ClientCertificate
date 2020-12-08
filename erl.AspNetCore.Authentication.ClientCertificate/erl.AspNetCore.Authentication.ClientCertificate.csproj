@@ -3,11 +3,16 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     <Version>1.0.0-preview8</Version>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 
+  <!-- NuGet -->
+  <PropertyGroup>
     <PackageId>erl.AspNetCore.Authentication.ClientCertificate</PackageId>
-    <Authors>Espen Røvik Larsen</Authors>
+    <Authors>Espen Røvik Larsen;Peder Husom</Authors>
     <Description>
-      Expands client certificate validation using a certificate store. Also provides a UI for managing the certificate store.
+      Expands upon client certificate authentication adding support for whitelisting certificates. Includes web UI for managing the certificate store.
     </Description>
     <PackageTags>aspnetcore;authentication;security;x509;certificate</PackageTags>
     <RepositoryUrl>https://github.com/espenrl/erl.AspNetCore.Authentication.ClientCertificate</RepositoryUrl>
@@ -29,10 +34,6 @@
     <EmbeddedResource Include="bootstrap.bundle.min.js" />
   </ItemGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="3.1.7" />
   </ItemGroup>
@@ -41,12 +42,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="5.0.0" />
   </ItemGroup>
 
-  <!-- SourceLink -->
+  <!-- Source Link -->
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <!-- analyzers -->
+  <!-- Roslyn analyzers -->
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
       <PrivateAssets>all</PrivateAssets>
