@@ -105,15 +105,10 @@ namespace erl.AspNetCore.Authentication.ClientCertificate
                     .TryGetCertificate(thumbprint, cancellationToken)
                     .ConfigureAwait(false);
 
-                var isRegisteredClientCertificate = itemFromRepository.CertificateFound;
-                var slidingExpiration = isRegisteredClientCertificate
-                    ? TimeSpan.FromMinutes(10) // cache registered client certificate: do not overload storage
-                    : TimeSpan.FromMinutes(1); // client certificate not registered: protect against DDoS attack
-
                 _memoryCache.Set(key, itemFromRepository, new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1), // refresh from storage once an hour for up to date data (role/description)
-                    SlidingExpiration = slidingExpiration
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10), // refresh from storage at least every 10 minutes for up to date data (role/description)
+                    SlidingExpiration = TimeSpan.FromMinutes(1)
                 });
 
                 return itemFromRepository;
